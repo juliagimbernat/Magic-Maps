@@ -26,10 +26,10 @@ os.system('hostname -I')
 os.system('iwgetid')
 os.system('espeak "Welcome to V I map by Group 12" 2>/dev/null')
 file = open( "/dev/input/mice", "rb" );
-n_file = file
+n_file = 0
 
 while True:
-    while (n_file != file):
+    while (1): #n_file != file):
         print "1"
             buf = file.read(3)
             n_file = file
@@ -73,5 +73,3 @@ if exit.is_pressed:
         exit()
 
 file.close()
-
-
