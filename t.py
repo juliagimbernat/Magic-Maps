@@ -16,6 +16,7 @@ Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
 NUMBER_READOUTS = 5
 button = Button(23)
 exit = Button (18)
+button_road = Button(21)
 name = [0,0,0,0,0,0]
 Long = (END_X - START_X) /2 + START_X
 Lat = (END_Y - START_Y) /2 + START_Y
@@ -28,7 +29,9 @@ os.system('espeak "Welcome to V I map by Group 12" 2>/dev/null')
 file = open( "/dev/input/mice", "rb" );
 n_file = 0
 
+
 while True:
+    URL_road = "https://roads.googleapis.com/v1/api/place/snapToRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
     while (1): #n_file != file):
         print "1"
             buf = file.read(3)
@@ -46,7 +49,7 @@ while True:
         html=urllib.urlopen(URL)
         htmltext=html.read()
         #htmltext = "TEST\"name\" : \"Imperial College London\",TESTTEST\"name\" : \"Museum\",TESTTEST\"name\" : \"NATAAAA\",TEST"
-        print("DATABASE UPDATED!\n")
+        print("PLACES DATABASE UPDATED!\n")
         postname = 1
         for i in range(NUMBER_READOUTS+1):
             phrase =  "\"name\" : \""
@@ -64,12 +67,49 @@ while True:
                 print(": "),
                 print(name[i])
                 os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
-if exit.is_pressed:
-    print ("Bye~")
-    print ("IP Adress for SSH:")
-    os.system('hostname -I')
-    os.system('iwgetid')
-    file.close()
+    if button_road.is_pressed:
+        for i in range(50):
+            print "GETTING ROAD DATA BUFFER...",i/50*100,"%"
+            buf = file.read(3)
+            n_file = file
+            x,y = struct.unpack( "bb", buf[1:] );
+            Long += x*X_SCALE
+            Lat += y*Y_SCALE
+            print ("Coord: x: %8f, y: %8f" % (Long, Lat));
+            URL_road += str(Lat)+","+str(Long)
+            if i != 49:
+                URL_road += "|"
+        html=urllib.urlopen(URL_road)
+        htmltext=html.read()
+        print("ROAD SNAPPING LOADED!\n")
+        phrase =  "\"placeId\" : \""
+        prename = htmltext.find(phrase,postname)
+        postname =  htmltext.find("\"", prename+len(phrase)+1)
+        placeId = htmltext[prename+len(phrase):postname]
+        print("Place Id: "),
+        print(placeId)
+        URL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&placeid="+placeId
+        html=urllib.urlopen(URL)
+        htmltext=html.read()
+        print("ROAD NAME UPDATED!\n")
+        phrase =  "\"long_name\" : \""
+        prename = htmltext.find(phrase,postname)
+        postname =  htmltext.find("\"", prename+len(phrase)+1)
+        road_address = htmltext[prename+len(phrase):postname]
+        print("Road name: "),
+        print(road_address)
+        os.system('espeak "{0}" 2>/dev/null'.format(road_address))
+
+    if exit.is_pressed:
+        print ("Bye~")
+        print ("IP Adress for SSH:")
+        os.system('hostname -I')
+        os.system('iwgetid')
+        file.close()
         exit()
 
 file.close()
+
+
+
+from time import sleep
