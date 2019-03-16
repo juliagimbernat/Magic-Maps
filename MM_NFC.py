@@ -59,6 +59,9 @@ KEY = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
 BLOCK_ADDRS = [8, 9, 10]
 
 
+# Auto update
+os.system("(cd ~/Magic_Maps_Imperial && git pull)")
+
 # Main function
 print ("IP Adress for SSH:")
 os.system('hostname -I')
