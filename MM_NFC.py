@@ -8,7 +8,6 @@
 # reboot app
 # GSM
 # tutorial speech and button
-# soft ware update through USB
 
 # recently added
 # audio loudness
@@ -17,6 +16,8 @@
 # Write tag
 # Read tag and auto update coordinates
 # faster reboot
+# soft ware update
+
 
 
 # Imports
@@ -68,8 +69,6 @@ os.system('hostname -I')
 os.system('iwgetid')
 os.system('espeak "Welcome to V I map by Group 12" 2>/dev/null')
 file = open( "/dev/input/mice", "rb" );
-URL_road = "https://roads.googleapis.com/v1/snapToRoads?&interpolate=true&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&path="
-#URL_road ="https://roads.googleapis.com/v1/nearestRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
 print ("PROGRAM LOADED!\n")
 
 def vol_up(channel):
@@ -84,6 +83,8 @@ def wifi_add:
     NFC_SCAN = true
 
 def places(channel):
+        global Long
+        global Lat
         print ("LOADING DATABASE...")
         URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
         print URL, "\nPLACES DATABASE UPDATED!\n"
@@ -111,16 +112,18 @@ def exit(channel):
 def roads(channel):
         global Long
         global Lat
-        global URL_road
+        URL_road = "https://roads.googleapis.com/v1/snapToRoads?&interpolate=true&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&path="
+        #URL_road ="https://roads.googleapis.com/v1/nearestRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
         for i in range(ROAD_BUFFER):
-                print "GETTING ROAD DATA BUFFER...",i,"out of", ROAD_BUFFER
+            print "GETTING ROAD DATA BUFFER...",i,"out of", ROAD_BUFFER
                 buf = file.read(3)
                 x,y = struct.unpack( "bb", buf[1:] );
                 Long += x*X_SCALE
                 Lat += y*Y_SCALE
                 print ("Coord: x: %8f, y: %8f" % (Long, Lat));
-                URL_road += str(Lat)+","+str(Long)
-                if i < 49:
+                if i > 20:
+                    URL_road += str(Lat)+","+str(Long)
+                if i < ROAD_BUFFER-1 and i > 20:
                     URL_road += "|"
         print URL_road
         html=urllib.urlopen(URL_road)
@@ -136,9 +139,9 @@ def roads(channel):
         html=urllib.urlopen(URL)
         htmltext=html.read()
         postname = 1
-        phrase =  "\"long_name\" : \""
+        phrase =  "\"formatted_address\" : \""
         prename = htmltext.find(phrase,postname)
-        postname =  htmltext.find("\"", prename+len(phrase)+1)
+        postname =  htmltext.find(",", prename+len(phrase)+1)
         road_address = htmltext[prename+len(phrase):postname]
         print("Road name: "),
         print(road_address)
