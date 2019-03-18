@@ -29,13 +29,13 @@ import RPi.GPIO as GPIO
 import MFRC522
 
 # GPIO setup
-GPIO.setmode(GPIO.BCM)
-button_places = 18
-button_roads = 21
-button_exit = 27
-button_UP = 0
-button_DOWN = 0
-button_NFC = 0
+GPIO.setmode(GPIO.BOARD)
+button_places = 12 #18
+button_roads = 40 #21
+button_exit = 13 #27
+button_UP = 29 #5
+button_DOWN = 31 #6
+button_NFC = 15 #22 
 GPIO.setup(button_places, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -55,7 +55,7 @@ Radius = 100
 NUMBER_READOUTS = 3
 name = [0,0,0,0,0,0]
 ROAD_BUFFER = 40
-NFC_SCAN = true
+NFC = True
 KEY = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
 BLOCK_ADDRS = [8, 9, 10]
 
@@ -72,16 +72,15 @@ file = open( "/dev/input/mice", "rb" );
 print ("PROGRAM LOADED!\n")
 
 def vol_up(channel):
-    #amixer scontrols
-        amixer set PCM 1000+
+#    	amixer scontrols
+	os.system('amixer sset PCM 20+')
 def vol_down(channel):
-        amixer set PCM 1000-
-def wifi_add:
+        os.system('amixer sset PCM 20-')
+def wifi_add(channel):
         SSID = raw_input(os.system('espeak "Enter Wifi name" 2>/dev/null'))
         PSK = raw_input(os.system('espeak "Enter Wifi password" 2>/dev/null'))
-def wifi_add:
-    NFC_SCAN = true
-
+def NFC_SCAN(channel):
+	NFC = True
 def places(channel):
         global Long
         global Lat
@@ -115,7 +114,7 @@ def roads(channel):
         URL_road = "https://roads.googleapis.com/v1/snapToRoads?&interpolate=true&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&path="
         #URL_road ="https://roads.googleapis.com/v1/nearestRoads?&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&points="
         for i in range(ROAD_BUFFER):
-            print "GETTING ROAD DATA BUFFER...",i,"out of", ROAD_BUFFER
+		print "GETTING ROAD DATA BUFFER...",i,"out of", ROAD_BUFFER
                 buf = file.read(3)
                 x,y = struct.unpack( "bb", buf[1:] );
                 Long += x*X_SCALE
@@ -152,18 +151,19 @@ GPIO.add_event_detect(button_exit, GPIO.FALLING, callback=exit, bouncetime=700)
 GPIO.add_event_detect(button_roads, GPIO.FALLING, callback=roads, bouncetime=700)
 GPIO.add_event_detect(button_UP, GPIO.FALLING, callback=vol_up, bouncetime=700)
 GPIO.add_event_detect(button_DOWN, GPIO.FALLING, callback=vol_down, bouncetime=700)
-GPIO.add_event_detect(button_NFC, GPIO.FALLING, callback=NFC, bouncetime=700)
+GPIO.add_event_detect(button_NFC, GPIO.FALLING, callback=NFC_SCAN, bouncetime=700)
 
 
 
-while true:
-        while NFC_SCAN:
+while True:
+        while NFC:
+	    print ("Waiting NFC...")
             (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
             if status == MIFAREReader.MI_OK:
                 print "Card detected"
-                    (status, uid) = MIFAREReader.MFRC522_Anticoll()
-                    MIFAREReader.MFRC522_SelectTag(uid)
-                    status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 11, KEY, uid)
+                (status, uid) = MIFAREReader.MFRC522_Anticoll()
+                MIFAREReader.MFRC522_SelectTag(uid)
+                status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 11, KEY, uid)
             data = []
             coord = ''
             if status == MIFAREReader.MI_OK:
@@ -182,7 +182,7 @@ while true:
                         corner[i] = coord[sep_pos_A:sep_pos_B]
                         sep_pos_A = sep_pos_B
                         print i,": ", corner[i]
-                    NFC_SCAN = false
+                    NFC_SCAN = False
                     START_X = corner[1]
                     START_Y = corner[2]
                     END_X = corner[3]
@@ -194,6 +194,6 @@ while true:
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE
-            Lat += y*Y_SCALE
-                print ("Coord: x: %8f, y: %8f" % (Long, Lat));
+        Lat += y*Y_SCALE
+        print ("Coord: x: %8f, y: %8f" % (Long, Lat));
 
