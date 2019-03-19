@@ -68,8 +68,9 @@ def places(channel):
                         os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
 def exit(channel):
         print ("QUITING PROGRAM...\nIP Adress for SSH:")
-        os.system('hostname -I')
-        os.system('iwgetid')
+        IP = os.system('hostname -I')
+        wifi = os.system('iwgetid')
+        os.system('espeak "IP Address {0}, wifi {1)" 2>/dev/null'.format(IP,wifi))
         raise SystemExit
 def roads(channel):
         global Long
@@ -120,6 +121,5 @@ while True:
         Long += x*X_SCALE
         Lat += y*Y_SCALE
         print ("Coord: x: %8f, y: %8f" % (Long, Lat));
-	os.system('espeak "IP Address {0}" 2>/dev/null'.format(IP))
 
 

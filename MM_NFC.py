@@ -47,7 +47,7 @@ MIFAREReader = MFRC522.MFRC522()
 # Constant Variables
 TOTAL_X_CAP = 1016
 TOTAL_Y_CAP = 762
-Radius = 100
+#Radius = 100
 #START_X = -0.1736854
 #START_Y = 51.4966478
 #END_X = -0.1640704
@@ -99,14 +99,15 @@ def places(channel):
                         os.system('espeak "There are no more places nearby" 2>/dev/null')
                         break
                 if i == 0:
-                            os.system('espeak "{0}, Top {1} places within {2} metres are" 2>/dev/null'.format(name[i],NUMBER_READOUTS,Radius))
+                            os.system('espeak "{0}, Top {1} places" 2>/dev/null'.format(name[i],NUMBER_READOUTS))
                 else:
                         print i,": ", name[i]
-                        os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
+                        os.system('espeak -s100 "{0}" 2>/dev/null'.format(name[i]))
 def exit(channel):
         print ("QUITING PROGRAM...\nIP Adress for SSH:")
-        os.system('hostname -I')
-        os.system('iwgetid')
+        IP = os.system('hostname -I')
+        wifi = os.system('iwgetid')
+        os.system('espeak "IP Address {0}, wifi {1)" 2>/dev/null'.format(IP,wifi))
         raise SystemExit
 def roads(channel):
         global Long
@@ -144,7 +145,7 @@ def roads(channel):
         road_address = htmltext[prename+len(phrase):postname]
         print("Road name: "),
         print(road_address)
-        os.system('espeak "{0}" 2>/dev/null'.format(road_address))
+        os.system('espeak -s100 "{0}" 2>/dev/null'.format(road_address))
 
 GPIO.add_event_detect(button_places, GPIO.FALLING, callback=places, bouncetime=700)
 GPIO.add_event_detect(button_exit, GPIO.FALLING, callback=exit, bouncetime=700)
@@ -191,6 +192,15 @@ while True:
                     Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
                     Long = (END_X - START_X) /2 + START_X
                     Lat = (END_Y - START_Y) /2 + START_Y
+                    Radius = abs(START_X - END_X)*0.15
+                    URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
+                    html=urllib.urlopen(URL)
+                    htmltext=html.read()
+                    phrase =  "\"name\" : \""
+                    prename = htmltext.find(phrase,1)
+                    postname =  htmltext.find("\"", prename+len(phrase)+1)
+                    city = htmltext[prename+len(phrase):postname]
+                    os.system('espeak -s100 "Chosen map is {0}" 2>/dev/null'.format(city))
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE
