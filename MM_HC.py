@@ -71,6 +71,7 @@ def exit(channel):
         IP = str(os.system('hostname -I'))
         wifi = str(os.system('iwgetid'))
 #        os.system('espeak "IP Address {0}, wifi {1}" 2>/dev/null'.format(IP,wifi))
+	os.system('espeak "Refreshing" 2>/dev/null')
         raise SystemExit
 def roads(channel):
         global Long
