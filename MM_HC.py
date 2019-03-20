@@ -68,9 +68,9 @@ def places(channel):
                         os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
 def exit(channel):
         print ("QUITING PROGRAM...\nIP Adress for SSH:")
-        IP = os.system('hostname -I')
-        wifi = os.system('iwgetid')
-        os.system('espeak "IP Address {0}, wifi {1}" 2>/dev/null'.format(IP,wifi))
+        IP = str(os.system('hostname -I'))
+        wifi = str(os.system('iwgetid'))
+#        os.system('espeak "IP Address {0}, wifi {1}" 2>/dev/null'.format(IP,wifi))
         raise SystemExit
 def roads(channel):
         global Long
