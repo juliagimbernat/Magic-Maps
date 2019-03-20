@@ -159,7 +159,7 @@ GPIO.add_event_detect(button_NFC, GPIO.FALLING, callback=NFC_SCAN, bouncetime=70
 
 while True:
         while NFC:
-	    print ("Waiting NFC...")
+            print ("Waiting NFC...")
             (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
             if status == MIFAREReader.MI_OK:
                 print "Card detected"
