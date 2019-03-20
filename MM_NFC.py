@@ -175,33 +175,33 @@ while True:
                         data += block
                 if data:
                     coord = ''.join(chr(i) for i in data)
-            MIFAREReader.MFRC522_StopCrypto1()
-            print coord
-            sep_pos_A = 0
-            separator =  ","
-            for i in range(4):
-                sep_pos_B =  coord.find(separator,sep_pos_A)
-                corner[i] = coord[sep_pos_A:sep_pos_B]
-                sep_pos_A = sep_pos_B
-                print i,": ", corner[i]
-            NFC_SCAN = False
-            START_X = corner[1]
-            START_Y = corner[2]
-            END_X = corner[3]
-            END_Y = corner[4]
-            X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
-            Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
-            Long = (END_X - START_X) /2 + START_X
-            Lat = (END_Y - START_Y) /2 + START_Y
-            Radius = abs(START_X - END_X)*0.15
-            URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
-            html=urllib.urlopen(URL)
-            htmltext=html.read()
-            phrase =  "\"name\" : \""
-            prename = htmltext.find(phrase,1)
-            postname =  htmltext.find("\"", prename+len(phrase)+1)
-            city = htmltext[prename+len(phrase):postname]
-            os.system('espeak -s100 "Chosen map is {0}" 2>/dev/null'.format(city))
+                MIFAREReader.MFRC522_StopCrypto1()
+                print coord
+                sep_pos_A = 0
+                separator =  ","
+                for i in range(4):
+                    sep_pos_B =  coord.find(separator,sep_pos_A)
+                    corner[i] = coord[sep_pos_A:sep_pos_B]
+                    sep_pos_A = sep_pos_B
+                    print i,": ", corner[i]
+                NFC_SCAN = False
+                START_X = corner[1]
+                START_Y = corner[2]
+                END_X = corner[3]
+                END_Y = corner[4]
+                X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
+                Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
+                Long = (END_X - START_X) /2 + START_X
+                Lat = (END_Y - START_Y) /2 + START_Y
+                Radius = abs(START_X - END_X)*0.15
+                URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
+                html=urllib.urlopen(URL)
+                htmltext=html.read()
+                phrase =  "\"name\" : \""
+                prename = htmltext.find(phrase,1)
+                postname =  htmltext.find("\"", prename+len(phrase)+1)
+                city = htmltext[prename+len(phrase):postname]
+                os.system('espeak -s100 "Chosen map is {0}" 2>/dev/null'.format(city))
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE
