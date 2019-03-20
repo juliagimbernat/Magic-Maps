@@ -57,25 +57,24 @@ while continue_reading:
     # Get the UID of the card
     (status,uid) = MIFAREReader.MFRC522_Anticoll()
 
-# If we have the UID, continue
-if status == MIFAREReader.MI_OK:
+    # If we have the UID, continue
+    if status == MIFAREReader.MI_OK:
     
     # Print UID
     print ("Card read UID: %s,%s,%s,%s" % (uid[0], uid[1], uid[2], uid[3]))
     
     # This is the default key for authentication
     key = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
-        
-        # Select the scanned tag
-        MIFAREReader.MFRC522_SelectTag(uid)
-        print "1"
-        # Authenticate
-        status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 16, key, uid)
-        print "2"
-        # Check if authenticated
-        if status == MIFAREReader.MI_OK:
-            MIFAREReader.MFRC522_Read(8)
-            MIFAREReader.MFRC522_StopCrypto1()
+    # Select the scanned tag
+    MIFAREReader.MFRC522_SelectTag(uid)
+    print "1"
+    # Authenticate
+    status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 16, key, uid)
+    print "2"
+    # Check if authenticated
+    if status == MIFAREReader.MI_OK:
+        MIFAREReader.MFRC522_Read(8)
+        MIFAREReader.MFRC522_StopCrypto1()
     else:
         print ("Authentication error")
 
