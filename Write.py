@@ -5,8 +5,8 @@ END_X = str(-0.1640704)
 END_Y = str(51.5006107)
 
 
-#text = START_X+","+START_Y+","+END_X+","+END_Y+","
-text = "dahkfhakufh"
+text = START_X+","+START_Y+","+END_X+","+END_Y+","
+#text = "dahkfhakufh"
 MIFAREReader = MFRC522.MFRC522()
 KEY = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
 BLOCK_ADDRS = [8, 9, 10]
