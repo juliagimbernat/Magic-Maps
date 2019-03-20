@@ -54,6 +54,7 @@ TOTAL_Y_CAP = 762
 #END_Y = 51.5006107
 NUMBER_READOUTS = 3
 name = [0,0,0,0,0,0]
+corner = [0,0,0,0,0,0]
 ROAD_BUFFER = 40
 NFC = True
 KEY = [0xFF,0xFF,0xFF,0xFF,0xFF,0xFF]
