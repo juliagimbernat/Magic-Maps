@@ -32,16 +32,15 @@ import MFRC522
 GPIO.setmode(GPIO.BOARD)
 button_places = 12 #18
 button_roads = 40 #21
-button_exit = 13 #27
+#button_exit = 13 #27 IN LOOP SCRIPT
+button_exit = 15 #22 TRIGGERS NFC RE-READ
 button_UP = 29 #5
 button_DOWN = 31 #6
-button_NFC = 15 #22 
 GPIO.setup(button_places, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(button_NFC, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 MIFAREReader = MFRC522.MFRC522()
 
 # Constant Variables
@@ -103,12 +102,12 @@ def places(channel):
                             os.system('espeak "{0}, Top {1} places" 2>/dev/null'.format(name[i],NUMBER_READOUTS))
                 else:
                         print i,": ", name[i]
-                        os.system('espeak -s100 "{0}" 2>/dev/null'.format(name[i]))
+                        os.system('espeak -s150 "{0}" 2>/dev/null'.format(name[i]))
 def exit(channel):
         print ("QUITING PROGRAM...\nIP Adress for SSH:")
         IP = os.system('hostname -I')
         wifi = os.system('iwgetid')
-        os.system('espeak "IP Address {0}, wifi {1)" 2>/dev/null'.format(IP,wifi))
+#        os.system('espeak "IP Address {0}, wifi {1)" 2>/dev/null'.format(IP,wifi))
         raise SystemExit
 def roads(channel):
         global Long
@@ -146,14 +145,13 @@ def roads(channel):
         road_address = htmltext[prename+len(phrase):postname]
         print("Road name: "),
         print(road_address)
-        os.system('espeak -s100 "{0}" 2>/dev/null'.format(road_address))
+        os.system('espeak -s150 "{0}" 2>/dev/null'.format(road_address))
 
 GPIO.add_event_detect(button_places, GPIO.FALLING, callback=places, bouncetime=700)
 GPIO.add_event_detect(button_exit, GPIO.FALLING, callback=exit, bouncetime=700)
 GPIO.add_event_detect(button_roads, GPIO.FALLING, callback=roads, bouncetime=700)
 GPIO.add_event_detect(button_UP, GPIO.FALLING, callback=vol_up, bouncetime=700)
 GPIO.add_event_detect(button_DOWN, GPIO.FALLING, callback=vol_down, bouncetime=700)
-GPIO.add_event_detect(button_NFC, GPIO.FALLING, callback=NFC_SCAN, bouncetime=700)
 
 
 
@@ -201,7 +199,7 @@ while True:
                 prename = htmltext.find(phrase,1)
                 postname =  htmltext.find("\"", prename+len(phrase)+1)
                 city = htmltext[prename+len(phrase):postname]
-                os.system('espeak -s100 "Chosen map is {0}" 2>/dev/null'.format(city))
+                os.system('espeak -s150 "Chosen map is {0}" 2>/dev/null'.format(city))
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE
