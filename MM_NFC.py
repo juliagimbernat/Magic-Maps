@@ -204,6 +204,7 @@ while True:
                     city = htmltext[prename+len(phrase):postname]
                     os.system('espeak -s150 "Chosen map is {0}" 2>/dev/null'.format(city))
             NFC = False
+            print ("No NFC detcted")
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE
