@@ -157,50 +157,53 @@ GPIO.add_event_detect(button_DOWN, GPIO.FALLING, callback=vol_down, bouncetime=7
 
 
 while True:
+        NFC_count = 0
         while NFC:
-            print ("Waiting NFC...")
-            (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-            if status == MIFAREReader.MI_OK:
-                print "Card detected"
-                (status, uid) = MIFAREReader.MFRC522_Anticoll()
-                MIFAREReader.MFRC522_SelectTag(uid)
-                status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 11, KEY, uid)
-            data = []
-            coord = ''
-            if status == MIFAREReader.MI_OK:
-                for block_num in BLOCK_ADDRS:
-                    block = MIFAREReader.MFRC522_Read(block_num)
-                    if block:
-                        data += block
-                if data:
-                    coord = ''.join(chr(i) for i in data)
-                MIFAREReader.MFRC522_StopCrypto1()
-                print coord
-                sep_pos_A = -1
-                separator =  ","
-                for i in range(4):
-                    sep_pos_B =  coord.find(separator,sep_pos_A+1)
-                    corner[i] = coord[sep_pos_A+1:sep_pos_B]
-                    sep_pos_A = sep_pos_B
-                    print i,": ", corner[i]
-                NFC = False
-                START_X = float(corner[0])
-                START_Y = float(corner[1])
-                END_X = float(corner[2])
-                END_Y = float(corner[3])
-                X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
-                Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
-                Long = (END_X - START_X) /2 + START_X
-                Lat = (END_Y - START_Y) /2 + START_Y
-                Radius = abs(START_X - END_X)*15000
-                URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
-                html=urllib.urlopen(URL)
-                htmltext=html.read()
-                phrase =  "\"name\" : \""
-                prename = htmltext.find(phrase,1)
-                postname =  htmltext.find("\"", prename+len(phrase)+1)
-                city = htmltext[prename+len(phrase):postname]
-                os.system('espeak -s150 "Chosen map is {0}" 2>/dev/null'.format(city))
+            while NFC_count < 15:
+                print ("Waiting NFC...")
+                (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+                if status == MIFAREReader.MI_OK:
+                    print "Card detected"
+                    (status, uid) = MIFAREReader.MFRC522_Anticoll()
+                    MIFAREReader.MFRC522_SelectTag(uid)
+                    status = MIFAREReader.MFRC522_Auth(MIFAREReader.PICC_AUTHENT1A, 11, KEY, uid)
+                data = []
+                coord = ''
+                if status == MIFAREReader.MI_OK:
+                    for block_num in BLOCK_ADDRS:
+                        block = MIFAREReader.MFRC522_Read(block_num)
+                        if block:
+                            data += block
+                    if data:
+                        coord = ''.join(chr(i) for i in data)
+                    MIFAREReader.MFRC522_StopCrypto1()
+                    print coord
+                    sep_pos_A = -1
+                    separator =  ","
+                    for i in range(4):
+                        sep_pos_B =  coord.find(separator,sep_pos_A+1)
+                        corner[i] = coord[sep_pos_A+1:sep_pos_B]
+                        sep_pos_A = sep_pos_B
+                        print i,": ", corner[i]
+                    NFC = False
+                    START_X = float(corner[0])
+                    START_Y = float(corner[1])
+                    END_X = float(corner[2])
+                    END_Y = float(corner[3])
+                    X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
+                    Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
+                    Long = (END_X - START_X) /2 + START_X
+                    Lat = (END_Y - START_Y) /2 + START_Y
+                    Radius = abs(START_X - END_X)*15000
+                    URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?radius="+str(Radius)+"&key=AIzaSyA3aYU6UKfZkp8QfafB2WCfouPjxVrFx2A&location="+str(Lat)+","+str(Long)
+                    html=urllib.urlopen(URL)
+                    htmltext=html.read()
+                    phrase =  "\"name\" : \""
+                    prename = htmltext.find(phrase,1)
+                    postname =  htmltext.find("\"", prename+len(phrase)+1)
+                    city = htmltext[prename+len(phrase):postname]
+                    os.system('espeak -s150 "Chosen map is {0}" 2>/dev/null'.format(city))
+            NFC = False
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE
