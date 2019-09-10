@@ -159,7 +159,8 @@ GPIO.add_event_detect(button_DOWN, GPIO.FALLING, callback=vol_down, bouncetime=7
 while True:
         NFC_count = 0
         while NFC:
-            while NFC_count < 15:
+            while NFC_count < 10:
+		NFC_count += 1
                 print ("Waiting NFC...")
                 (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
                 if status == MIFAREReader.MI_OK:
@@ -186,6 +187,7 @@ while True:
                         sep_pos_A = sep_pos_B
                         print i,": ", corner[i]
                     NFC = False
+		    NFC_count = 10
                     START_X = float(corner[0])
                     START_Y = float(corner[1])
                     END_X = float(corner[2])
