@@ -24,11 +24,21 @@ NUMBER_READOUTS = 3
 name = [0,0,0,0,0,0]
 ROAD_BUFFER = 50
 
+os.system('espeak "Welcome to V I map" 2>/dev/null')
 
-GPIO.setmode(GPIO.BCM)
-button_places = 18
-button_roads = 21
-button_exit = 22
+GPIO.setmode(GPIO.BOARD)
+
+button_places = 16 #23  OOPS 12 #18
+button_roads = 38 #20  OOPS 40 #21
+#button_exit = 13 #27 IN LOOP SCRIPT
+button_exit = 15 #22 TRIGGERS NFC RE-READ
+button_UP = 29 #5
+button_DOWN = 31 #6
+#GPIO.setmode(GPIO.BCM)
+#button_places = 18
+#button_roads = 21
+#button_exit = 22
+
 GPIO.setup(button_places, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
