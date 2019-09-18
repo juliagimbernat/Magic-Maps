@@ -204,7 +204,18 @@ while True:
                     city = htmltext[prename+len(phrase):postname]
                     os.system('espeak -s150 "Chosen map is {0}" 2>/dev/null'.format(city))
             NFC = False
-            print ("No NFC detcted")
+            Radius = 100
+            START_Y =51.4966478
+            START_X =-0.1736854
+            END_Y =51.5006107
+            END_X =-0.1640704
+            TOTAL_X_CAP =1016
+            TOTAL_Y_CAP =762
+            X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
+            Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
+            Long = (END_X - START_X) /2 + START_X
+            Lat = (END_Y - START_Y) /2 + START_Y
+            print ("No NFC detcted, using default parameters")
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
         Long += x*X_SCALE

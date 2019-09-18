@@ -26,9 +26,9 @@ ROAD_BUFFER = 50
 
 
 GPIO.setmode(GPIO.BCM)
-button_places = 23
-button_roads = 16
-button_exit = 27
+button_places = 18
+button_roads = 21
+button_exit = 22
 GPIO.setup(button_places, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
