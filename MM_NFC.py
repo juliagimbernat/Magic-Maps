@@ -30,8 +30,9 @@ import MFRC522
 
 # GPIO setup
 GPIO.setmode(GPIO.BOARD)
-button_places = 12 #18
-button_roads = 40 #21
+
+button_places = 16 #23  OOPS 12 #18
+button_roads = 38 #20  OOPS 40 #21
 #button_exit = 13 #27 IN LOOP SCRIPT
 button_exit = 15 #22 TRIGGERS NFC RE-READ
 button_UP = 29 #5
@@ -41,6 +42,8 @@ GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+os.system('espeak "Welcome to V I map by Group 12" 2>/dev/null')
+
 MIFAREReader = MFRC522.MFRC522()
 
 # Constant Variables
@@ -104,7 +107,7 @@ def places(channel):
                         print i,": ", name[i]
                         os.system('espeak -s150 "{0}" 2>/dev/null'.format(name[i]))
 def exit(channel):
-        print ("QUITING PROGRAM...\nIP Adress for SSH:")
+        print ("QUITING PROGRAM...\nIP Address for SSH:")
         IP = os.system('hostname -I')
         wifi = os.system('iwgetid')
 #        os.system('espeak "IP Address {0}, wifi {1)" 2>/dev/null'.format(IP,wifi))
