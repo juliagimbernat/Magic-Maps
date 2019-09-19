@@ -24,14 +24,13 @@ NUMBER_READOUTS = 3
 name = [0,0,0,0,0,0]
 ROAD_BUFFER = 50
 
-os.system('espeak "Welcome to V I map" 2>/dev/null')
 
 GPIO.setmode(GPIO.BOARD)
 
 button_places = 16 #23  OOPS 12 #18
 button_roads = 38 #20  OOPS 40 #21
 #button_exit = 13 #27 IN LOOP SCRIPT
-button_exit = 15 #22 TRIGGERS NFC RE-READ
+button_exit = 13 #27 16 #22 TRIGGERS NFC RE-READ
 button_UP = 29 #5
 button_DOWN = 31 #6
 #GPIO.setmode(GPIO.BCM)
@@ -48,7 +47,7 @@ print ("IP Adress for SSH:")
 IP = os.system('hostname -I')
 os.system('iwgetid')
 print IP
-os.system('espeak "Welcome to V I map" 2>/dev/null')
+os.system('espeak "Welcome to V I map" 2>/dev/null &')
 file = open( "/dev/input/mice", "rb" );
 print ("PROGRAM LOADED!\n")
 
@@ -69,19 +68,19 @@ def places(channel):
                 postname =  htmltext.find("\"", prename+len(phrase)+1)
                 name[i] = htmltext[prename+len(phrase):postname]
                 if name[i] == "l_attributions":
-                        os.system('espeak "There are no more places nearby" 2>/dev/null')
+                        os.system('espeak "There are no more places nearby" 2>/dev/null ')
                         break
                 if i == 0:
-                            os.system('espeak "{0}, {1} places within {2} metres" 2>/dev/null'.format(name[i],NUMBER_READOUTS,Radius))
+                            os.system('espeak "{0}, {1} places within {2} metres" 2>/dev/null '.format(name[i],NUMBER_READOUTS,Radius))
                 else:
                         print i,": ", name[i]
-                        os.system('espeak "{0}" 2>/dev/null'.format(name[i]))
+                        os.system('espeak "{0}" 2>/dev/null '.format(name[i]))
 def exit(channel):
         print ("QUITING PROGRAM...\nIP Adress for SSH:")
         IP = str(os.system('hostname -I'))
         wifi = str(os.system('iwgetid'))
 #        os.system('espeak "IP Address {0}, wifi {1}" 2>/dev/null'.format(IP,wifi))
-	os.system('espeak "Refreshing" 2>/dev/null')
+	os.system('espeak "Refreshing" 2>/dev/null ')
         raise SystemExit
 def roads(channel):
         global Long
@@ -119,7 +118,7 @@ def roads(channel):
         road_address = htmltext[prename+len(phrase):postname]
         print("Road name: "),
         print(road_address)
-        os.system('espeak "{0}" 2>/dev/null'.format(road_address))
+        os.system('espeak "{0}" 2>/dev/null '.format(road_address))
 
 GPIO.add_event_detect(button_places, GPIO.FALLING, callback=places, bouncetime=700)
 GPIO.add_event_detect(button_exit, GPIO.FALLING, callback=exit, bouncetime=700)
