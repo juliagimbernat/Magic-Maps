@@ -42,7 +42,6 @@ GPIO.setup(button_roads, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_exit, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_UP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(button_DOWN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-os.system('espeak "Welcome to V I map by Group 12" 2>/dev/null')
 
 MIFAREReader = MFRC522.MFRC522()
 
