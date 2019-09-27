@@ -1,5 +1,4 @@
-# 2018 - 2019 Imperial College London Biomedical Engineering Year 2 Engineering Design Project
-# Ronald Hsu
+# 2018 - 2019 Imperial College London Biomedical Engineering Year 2 Engineering Design Project Ronald Hsu
 
 
 import array
@@ -10,14 +9,18 @@ import RPi.GPIO as GPIO
 
 
 Radius = 100
+#END_Y = 50.720943
 START_Y =51.4966478
+#END_X =-1.868413
 START_X =-0.1736854
+#START_Y = 50.712210
 END_Y =51.5006107
+#START_X = -1.886354
 END_X =-0.1640704
 TOTAL_X_CAP =1016
 TOTAL_Y_CAP =762
-X_SCALE = abs(START_X - END_X)/TOTAL_X_CAP
-Y_SCALE = abs(START_Y - END_Y)/TOTAL_Y_CAP
+X_SCALE = (END_X - START_X)/TOTAL_X_CAP
+Y_SCALE = (END_Y - START_Y)/TOTAL_Y_CAP
 Long = (END_X - START_X) /2 + START_X
 Lat = (END_Y - START_Y) /2 + START_Y
 NUMBER_READOUTS = 3
@@ -123,11 +126,22 @@ def roads(channel):
 GPIO.add_event_detect(button_places, GPIO.FALLING, callback=places, bouncetime=700)
 GPIO.add_event_detect(button_exit, GPIO.FALLING, callback=exit, bouncetime=700)
 GPIO.add_event_detect(button_roads, GPIO.FALLING, callback=roads, bouncetime=700)
-
+trigger = 0
 
 while True:
         buf = file.read(3)
         x,y = struct.unpack( "bb", buf[1:] );
+	triple =  struct.unpack( '3b', buf)
+	print triple
+	if triple[0] == 8:
+		print ("LEFT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		if trigger >= 0 and x <= TOTAL_X_CAP/10 and y <= TOTAL_Y_CAP/10 :
+			places(1)
+			print (" DOUBLE CLICKEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+			trigger = -1
+		else:
+			trigger = 3
+	trigger -= 1
         Long += x*X_SCALE
         Lat += y*Y_SCALE
         print ("Coord: x: %8f, y: %8f" % (Long, Lat));
