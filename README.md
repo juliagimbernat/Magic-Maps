@@ -39,5 +39,5 @@ This means either a keyboard or SSH mustbe used to run the script. The following
 
 - Additional Info
 
-The two airbars have a different orientaion when sensing, revert positivity of X_SCALE and Y_SCALE at the beginning of the script
-Audio crashes from time to time, press ctril+c to kill it so the rest of the script can continue
+1. The two airbars have a different orientaion when sensing, revert positivity of X_SCALE and Y_SCALE at the beginning of the script
+2. Audio crashes from time to time, press ctril+c to kill it so the rest of the script can continue
