@@ -22,7 +22,7 @@ Raspi auto connects to any saved network in system config, when connecting to a 
 1. Systems read “magic maps….”, ready to use
 or
 2. The script has not been set to run automatically.
-  - This means either a keyboard or SSH mustbe used to run the script. The following session explains the SSH method but the counterpart should be similar.
+This means either a keyboard or SSH mustbe used to run the script. The following session explains the SSH method but the counterpart should be similar.
 
 
 - Running the script manually
