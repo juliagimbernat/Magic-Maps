@@ -25,7 +25,7 @@ Long = (END_X - START_X) /2 + START_X
 Lat = (END_Y - START_Y) /2 + START_Y
 NUMBER_READOUTS = 3
 name = [0,0,0,0,0,0]
-ROAD_BUFFER = 50
+ROAD_BUFFER = 30
 
 
 GPIO.setmode(GPIO.BOARD)
@@ -50,7 +50,7 @@ print ("IP Adress for SSH:")
 IP = os.system('hostname -I')
 os.system('iwgetid')
 print IP
-os.system('espeak "Welcome to V I map" 2>/dev/null &')
+os.system('espeak "Welcome to V I map" 2>/dev/null')
 file = open( "/dev/input/mice", "rb" );
 print ("PROGRAM LOADED!\n")
 
@@ -136,14 +136,12 @@ while True:
 	if triple[0] == 8:
 		print ("LEFT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		if trigger >= 0 and x <= TOTAL_X_CAP/10 and y <= TOTAL_Y_CAP/10 :
-			places(1)
 			print (" DOUBLE CLICKEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+			places(1)
 			trigger = -1
 		else:
-			trigger = 3
+			trigger = 2
 	trigger -= 1
         Long += x*X_SCALE
         Lat += y*Y_SCALE
         print ("Coord: x: %8f, y: %8f" % (Long, Lat));
-
-
